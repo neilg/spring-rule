@@ -1,8 +1,7 @@
 language: java
-install: echo ${A_KEY}
+install: echo
 script: mvn clean install site -Dgithub.global.oauth2Token=${GITHUB_TOKEN}
 jdk:
 - openjdk7
 env:
   secure: "ZsCMMv8C5WB7V5dB5jpTMKKeLrpZDJvMpitO5heG0b0vyM7CVHcPz+PYKV+pwsQpN2beHjpr1D5PqUe00+lR8DuMNvvYZhRd0WgbzMj+ZCC37kLqMt+Z7UjPIc6bbxfSlD/RmYHn9bmeC6HryAa6m85Nu1KGuiiUL+f13WfiqNg="
-  secure: "P3JhJnc+UohE1r7/m4iWY1m72JMnLu2DdzVsDd8rLG01tYAl8tdePTjRyq8nfcBs6x+5fXtcq5CwG9cC15LbUCy38RdKogduK2VMBtQqsa+uFmz+NLHasNCn3Y/kPiFwZoq6wiIffU8F+FZRZ8wqvkV09ejxi8HH+86MmF3ozhI="
