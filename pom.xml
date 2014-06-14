@@ -19,6 +19,7 @@
         <spring.version>4.0.5.RELEASE</spring.version>
 
         <failsafe.plugin.version>2.16</failsafe.plugin.version>
+        <pitest-plugin.version>1.0.0</pitest-plugin.version>
     </properties>
 
     <build>
@@ -84,5 +85,58 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>mutation</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>${pitest-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>mutationCoverage</goal>
+                                </goals>
+                                <configuration>
+                                    <targetClasses>
+                                        <classes>io.meles.*</classes>
+                                    </targetClasses>
+                                    <targetTests>
+                                        <tests>io.meles.*</tests>
+                                    </targetTests>
+                                    <timestampedReports>false</timestampedReports>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
