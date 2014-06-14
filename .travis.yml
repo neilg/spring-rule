@@ -1,7 +1,8 @@
 language: java
-
 install: echo
-script: mvn verify
-
+script: mvn clean install site
 jdk:
 - openjdk7
+env:
+  GITHUB_TOKEN:
+    secure: PyKKR/KwtSU+4Uy83DE0ZK9N94toZ0TTXc7baiozAaGgoS8Q2ooCujgl+/LsAxZSNeVuPCfTrsHIkkc0hN7+vYUTBeGEyM2pvhJAyUpngN3/tGP9WN6vI+Ls3XXfbQ+4qv/ncCjTmOlYgQVDKpFaCZGLO1A7coDJ2nS02oF/P7M=
