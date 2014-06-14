@@ -76,7 +76,7 @@ public class SpringContextRuleTest {
         final Statement wrappedStatement = badSpringContextRule.apply(statement, Description.EMPTY);
         try {
             wrappedStatement.evaluate();
-        } catch (Throwable t) {
+        } catch (Throwable ignored) {
         } finally {
             verify(statement, never()).evaluate();
         }
