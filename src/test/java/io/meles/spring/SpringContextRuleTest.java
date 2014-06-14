@@ -1,11 +1,10 @@
 package io.meles.spring;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import org.junit.Rule;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -22,12 +21,23 @@ public class SpringContextRuleTest {
         }
     }
 
-    @Rule
-    public SpringContextRule springContextRule = new SpringContextRule(SimpleConfig.class);
+    private SpringContextRule springContextRule;
+
+    @Before
+    public void createRule() {
+        springContextRule = new SpringContextRule(SimpleConfig.class);
+    }
 
     @Test
-    public void canRetrieveBeanFromContext() {
-        assertThat((String) springContextRule.getApplicationContext().getBean("asdf"), is("it's a string"));
+    public void canRetrieveBeanFromContext() throws Throwable {
+        final Object[] holder = new Object[1];
+        springContextRule.apply(new Statement() {
+            @Override
+            public void evaluate() {
+                holder[0] = springContextRule.getApplicationContext().getBean("asdf");
+            }
+        }, Description.EMPTY).evaluate();
+        assertEquals("it's a string", holder[0]);
     }
 
     @Test
