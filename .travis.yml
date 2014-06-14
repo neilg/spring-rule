@@ -1,0 +1,7 @@
+language: java
+
+install: echo
+script: mvn verify
+
+jdk:
+- openjdk7
