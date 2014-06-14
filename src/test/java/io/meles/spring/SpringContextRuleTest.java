@@ -46,8 +46,8 @@ public class SpringContextRuleTest {
 
     @Before
     public void createRules() {
-        springContextRule = new SpringContextRule(SimpleConfig.class);
-        badSpringContextRule = new SpringContextRule(ThrowingConfig.class);
+        springContextRule = SpringContextRule.builder().withConfig(SimpleConfig.class).build();
+        badSpringContextRule = SpringContextRule.builder().withConfig(ThrowingConfig.class).build();
     }
 
     @Test

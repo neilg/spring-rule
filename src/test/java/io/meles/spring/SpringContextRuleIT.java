@@ -28,7 +28,9 @@ import org.junit.Test;
 public class SpringContextRuleIT {
 
     @Rule
-    public SpringContextRule springContextRule = new SpringContextRule(SimpleConfig.class);
+    public SpringContextRule springContextRule = SpringContextRule.builder()
+            .withConfig(SimpleConfig.class)
+            .build();
 
     @Test
     public void canRetrieveBeanFromContext() {

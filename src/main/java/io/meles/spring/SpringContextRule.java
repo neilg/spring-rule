@@ -19,6 +19,12 @@
 
 package io.meles.spring;
 
+import static java.util.Arrays.asList;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -27,11 +33,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class SpringContextRule implements TestRule {
 
-    private final Class<?> config;
+    private final Class<?>[] config;
     private ApplicationContext applicationContext;
 
-    public SpringContextRule(final Class<?> config) {
-        this.config = config;
+    private SpringContextRule(final Builder builder) {
+        this.config = builder.configClasses.toArray(new Class[builder.configClasses.size()]);
     }
 
     @Override
@@ -49,5 +55,58 @@ public class SpringContextRule implements TestRule {
 
     public ApplicationContext getApplicationContext() {
         return applicationContext;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private List<Class> configClasses = new ArrayList<>();
+
+        /**
+         * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
+         *
+         * @return this Builder
+         */
+        public Builder withConfig(Class... configClasses) {
+            return withConfig(asList(configClasses));
+        }
+
+        /**
+         * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
+         *
+         * @return this Builder
+         */
+        public Builder withConfig(Collection<Class> configClasses) {
+            this.configClasses = new ArrayList<>(configClasses);
+            return this;
+        }
+
+        /**
+         * Add <code>configClasses</code> to this <code>Builder</code>'s list of config <code>Class</code>es.
+         *
+         * @param configClasses the spring config classes to add
+         * @return this Builder
+         */
+        public Builder addConfig(Class... configClasses) {
+            return addConfig(asList(configClasses));
+        }
+
+        /**
+         * Add <code>configClasses</code> to this <code>Builder</code>'s list of config <code>Class</code>es.
+         *
+         * @param configClasses the spring config classes to add
+         * @return this Builder
+         */
+        private Builder addConfig(Collection<Class> configClasses) {
+            this.configClasses.addAll(configClasses);
+            return this;
+        }
+
+        public SpringContextRule build() {
+            return new SpringContextRule(this);
+        }
     }
 }
