@@ -1,6 +1,6 @@
 language: java
 install: true
-script: mvn clean install
+script: mvn clean install -T1C
 after_script: mvn site -Dgithub.global.oauth2Token=${GITHUB_TOKEN}
 jdk:
 - openjdk7
