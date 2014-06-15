@@ -90,6 +90,13 @@ public class SpringContextRuleTest {
         wrappedStatement.evaluate();
     }
 
+    @Test
+    public void cannotGetApplicationContextOutsideOfEvaluation() {
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("no spring application context, are you calling getApplicationContext() outside of a test execution");
+        springContextRule.getApplicationContext();
+    }
+
     private Matcher<Throwable> rootCause(final Matcher<? super Throwable> throwableMatcher) {
         return new TypeSafeDiagnosingMatcher<Throwable>() {
             @Override

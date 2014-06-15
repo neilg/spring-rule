@@ -48,12 +48,17 @@ public class SpringContextRule implements TestRule {
                 try (AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(config)) {
                     SpringContextRule.this.applicationContext = applicationContext;
                     base.evaluate();
+                } finally {
+                    applicationContext = null;
                 }
             }
         };
     }
 
     public ApplicationContext getApplicationContext() {
+        if (applicationContext == null) {
+            throw new IllegalStateException("no spring application context, are you calling getApplicationContext() outside of a test execution");
+        }
         return applicationContext;
     }
 
