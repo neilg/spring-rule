@@ -317,6 +317,7 @@
                         <configuration>
                             <message>Creating site for ${project.version}</message>
                             <path>${project.version}</path>
+                            <merge>true</merge>
                         </configuration>
                         <executions>
                             <execution>
