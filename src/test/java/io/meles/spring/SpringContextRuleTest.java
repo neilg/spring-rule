@@ -21,6 +21,7 @@ package io.meles.spring;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -88,6 +89,11 @@ public class SpringContextRuleTest {
         final Statement wrappedStatement = badSpringContextRule.apply(statement, Description.EMPTY);
         expectedException.expect(rootCause(hasMessage(equalTo("bad, bad, bad"))));
         wrappedStatement.evaluate();
+    }
+
+    @Test
+    public void failingTest() {
+        assertTrue(false);
     }
 
     private Matcher<Throwable> rootCause(final Matcher<? super Throwable> throwableMatcher) {
