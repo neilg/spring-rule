@@ -46,8 +46,13 @@ public class SpringContextTest {
 
     @Before
     public void createRules() {
-        springContext = SpringContext.builder().withConfig(SimpleConfig.class).build();
-        badSpringContext = SpringContext.builder().withConfig(ThrowingConfig.class).build();
+        springContext = SpringContext.builder()
+                .withConfig(SimpleConfig.class)
+                .addConfig(ExtraConfig.class)
+                .build();
+        badSpringContext = SpringContext.builder()
+                .withConfig(ThrowingConfig.class)
+                .build();
     }
 
     @Test
@@ -60,6 +65,18 @@ public class SpringContextTest {
             }
         }, Description.EMPTY).evaluate();
         assertEquals("it's a string", holder[0]);
+    }
+
+    @Test
+    public void canGetBeanFromAddedConfig() throws Throwable {
+        final Object[] holder = new Object[1];
+        springContext.apply(new Statement() {
+            @Override
+            public void evaluate() {
+                holder[0] = springContext.getApplicationContext().getBean("extraString");
+            }
+        }, Description.EMPTY).evaluate();
+        assertEquals("the extra string", holder[0]);
     }
 
     @Test
