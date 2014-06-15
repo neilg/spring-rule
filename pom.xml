@@ -69,6 +69,7 @@
         <maven-install-plugin.version>2.5.1</maven-install-plugin.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <maven-jxr-plugin.version>2.4</maven-jxr-plugin.version>
         <maven-pmd-plugin.version>3.1</maven-pmd-plugin.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
@@ -114,6 +115,10 @@
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>${maven-jxr-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
@@ -192,6 +197,9 @@
 
     <reporting>
         <plugins>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
