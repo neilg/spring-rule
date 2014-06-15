@@ -36,12 +36,19 @@
             <gitHub>
                 <projectId>neilg/spring-rule</projectId>
                 <ribbonOrientation>right</ribbonOrientation>
-                <ribbonColor>red</ribbonColor>
+                <ribbonColor>gray</ribbonColor>
             </gitHub>
         </fluidoSkin>
     </custom>
 
     <body>
+        <menu name="Overview">
+            <item name="Introduction" href="./index.html"/>
+            <item name="Quickstart" href="./quickstart.html"/>
+        </menu>
+        <menu name="Developing">
+            <item name="Building" href="./building.html"/>
+        </menu>
         <menu ref="reports"/>
     </body>
 

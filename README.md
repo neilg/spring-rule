@@ -8,7 +8,7 @@ A [JUnit rule](https://github.com/junit-team/junit/wiki/Rules) to manage [Spring
 public class SomeTest {
 
     @Rule
-    public SpringContextRule springContextRule = SpringContextRule.builder()
+    public SpringContext springContext = SpringContext.builder()
             .withConfig(SomeConfig.class, MoreConfig.class)
             .build();
 
@@ -17,7 +17,7 @@ public class SomeTest {
 
     @Before
     public void autowire() {
-        springContextRule.autowire(this);
+        springContext.autowire(this);
     }
 
     @Test
