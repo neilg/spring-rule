@@ -68,6 +68,7 @@ public class SpringContextRule implements TestRule {
         /**
          * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
          *
+         * @param configClasses the spring config classes to use
          * @return this Builder
          */
         public Builder withConfig(Class... configClasses) {
@@ -77,6 +78,7 @@ public class SpringContextRule implements TestRule {
         /**
          * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
          *
+         * @param configClasses the spring config classes to use
          * @return this Builder
          */
         public Builder withConfig(Collection<Class> configClasses) {
