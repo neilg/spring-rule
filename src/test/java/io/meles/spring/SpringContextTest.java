@@ -21,6 +21,7 @@ package io.meles.spring;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -35,6 +36,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 public class SpringContextTest {
 
@@ -112,6 +115,19 @@ public class SpringContextTest {
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("no spring application context, are you calling getApplicationContext() outside of a test execution");
         springContext.getApplicationContext();
+    }
+
+    @Test
+    public void contextIsClosedAfterEvaluation() throws Throwable {
+        final ApplicationContext[] holder = new ApplicationContext[1];
+        springContext.apply(new Statement() {
+            @Override
+            public void evaluate() {
+                holder[0] = springContext.getApplicationContext();
+            }
+        }, Description.EMPTY).evaluate();
+        assertFalse(((ConfigurableApplicationContext) holder[0]).isActive());
+        assertFalse(((ConfigurableApplicationContext) holder[0]).isRunning());
     }
 
     private Matcher<Throwable> rootCause(final Matcher<? super Throwable> throwableMatcher) {
