@@ -27,7 +27,7 @@ Then write a test that needs a spring context
     }
 
 But I don't want to keep retrieving beans from the SpringContext. Don't worry, the SpringContext rule
-[supports autowiring](./apidocs/io/meles/spring/SpringContext.html#autowire-java.lang.Object-).
+[supports autowiring](./apidocs/io/meles/spring/SpringContext.html\#autowire(java.lang.Object)).
     
     @Autowired
     private FooService fooService;
