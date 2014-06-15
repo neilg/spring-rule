@@ -37,11 +37,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 public class SpringContextRule implements TestRule, BeanFactory {
 
-    private final Class<?>[] config;
+    private final Class<?>[] configClasses;
     private ApplicationContext applicationContext;
 
     private SpringContextRule(final Builder builder) {
-        this.config = builder.configClasses.toArray(new Class[builder.configClasses.size()]);
+        this.configClasses = builder.configClasses.toArray(new Class[builder.configClasses.size()]);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SpringContextRule implements TestRule, BeanFactory {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                try (AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(config)) {
+                try (AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(configClasses)) {
                     SpringContextRule.this.applicationContext = applicationContext;
                     base.evaluate();
                 } finally {
