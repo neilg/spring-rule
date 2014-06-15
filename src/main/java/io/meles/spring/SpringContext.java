@@ -35,12 +35,12 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class SpringContextRule implements TestRule, BeanFactory {
+public class SpringContext implements TestRule, BeanFactory {
 
     private final Class<?>[] configClasses;
     private ApplicationContext applicationContext;
 
-    private SpringContextRule(final Builder builder) {
+    private SpringContext(final Builder builder) {
         this.configClasses = builder.configClasses.toArray(new Class[builder.configClasses.size()]);
     }
 
@@ -50,7 +50,7 @@ public class SpringContextRule implements TestRule, BeanFactory {
             @Override
             public void evaluate() throws Throwable {
                 try (AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(configClasses)) {
-                    SpringContextRule.this.applicationContext = applicationContext;
+                    SpringContext.this.applicationContext = applicationContext;
                     base.evaluate();
                 } finally {
                     applicationContext = null;
@@ -189,8 +189,8 @@ public class SpringContextRule implements TestRule, BeanFactory {
             return this;
         }
 
-        public SpringContextRule build() {
-            return new SpringContextRule(this);
+        public SpringContext build() {
+            return new SpringContext(this);
         }
     }
 }

@@ -31,10 +31,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class SpringContextRuleIT {
+public class SpringRuleIT {
 
     @Rule
-    public SpringContextRule springContextRule = SpringContextRule.builder()
+    public SpringContext springContext = SpringContext.builder()
             .withConfig(SimpleConfig.class)
             .build();
 
@@ -43,7 +43,7 @@ public class SpringContextRuleIT {
 
     @Before
     public void autowire() {
-        springContextRule.autowire(this);
+        springContext.autowire(this);
     }
 
     @Test
@@ -53,66 +53,66 @@ public class SpringContextRuleIT {
 
     @Test
     public void canRetrieveBeanFromContext() {
-        assertThat((String) springContextRule.getApplicationContext().getBean("stringBean"), is("it's a string"));
+        assertThat((String) springContext.getApplicationContext().getBean("stringBean"), is("it's a string"));
     }
 
     @Test
     public void canGetBeanByName() {
-        final Object asdf = springContextRule.getBean("stringBean");
+        final Object asdf = springContext.getBean("stringBean");
         assertThat(asdf, is((Object) "it's a string"));
     }
 
     @Test
     public void canGetBeanByNameAndType() {
-        final String string = springContextRule.getBean("stringBean", String.class);
+        final String string = springContext.getBean("stringBean", String.class);
         assertThat(string, is("it's a string"));
     }
 
     @Test
     public void canGetBeanByType() {
-        final Integer integer = springContextRule.getBean(Integer.class);
+        final Integer integer = springContext.getBean(Integer.class);
         assertThat(integer, is(1));
     }
 
     @Test
     public void canGetBeanByNameAndOverrideParams() {
-        final Object prototypeStringWithArgOverride = springContextRule.getBean("prototypeStringWithArg", Integer.valueOf(3));
+        final Object prototypeStringWithArgOverride = springContext.getBean("prototypeStringWithArg", Integer.valueOf(3));
         assertEquals("3", prototypeStringWithArgOverride);
     }
 
     @Test
     public void canCheckContainsBeanByName() {
-        assertTrue(springContextRule.containsBean("stringBean"));
-        assertFalse(springContextRule.containsBean("not_present"));
+        assertTrue(springContext.containsBean("stringBean"));
+        assertFalse(springContext.containsBean("not_present"));
     }
 
     @Test
     public void canCheckSingletonScopeByName() {
-        assertTrue(springContextRule.isSingleton("singletonString"));
-        assertFalse(springContextRule.isSingleton("prototypeString"));
+        assertTrue(springContext.isSingleton("singletonString"));
+        assertFalse(springContext.isSingleton("prototypeString"));
     }
 
     @Test
     public void canCheckPrototypeScopeByName() {
-        assertFalse(springContextRule.isPrototype("singletonString"));
-        assertTrue(springContextRule.isPrototype("prototypeString"));
+        assertFalse(springContext.isPrototype("singletonString"));
+        assertTrue(springContext.isPrototype("prototypeString"));
     }
 
     @Test
     public void canCheckTypeMatch() {
-        assertTrue(springContextRule.isTypeMatch("stringBean", String.class));
-        assertFalse(springContextRule.isTypeMatch("stringBean", Integer.class));
+        assertTrue(springContext.isTypeMatch("stringBean", String.class));
+        assertFalse(springContext.isTypeMatch("stringBean", Integer.class));
     }
 
     @Test
     public void canGetBeanTypeByName() {
-        final Class<?> type = springContextRule.getType("stringBean");
+        final Class<?> type = springContext.getType("stringBean");
         assertEquals(String.class, type);
     }
 
     @Test
     public void canGetAliasesByName() {
-        final String[] stringBeanAliases = springContextRule.getAliases("stringBean");
+        final String[] stringBeanAliases = springContext.getAliases("stringBean");
         assertThat(stringBeanAliases, arrayContainingInAnyOrder("stringBeanAlias"));
     }
 

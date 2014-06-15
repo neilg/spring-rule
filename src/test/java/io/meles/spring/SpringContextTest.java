@@ -36,27 +36,27 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
-public class SpringContextRuleTest {
+public class SpringContextTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private SpringContextRule springContextRule;
-    private SpringContextRule badSpringContextRule;
+    private SpringContext springContext;
+    private SpringContext badSpringContext;
 
     @Before
     public void createRules() {
-        springContextRule = SpringContextRule.builder().withConfig(SimpleConfig.class).build();
-        badSpringContextRule = SpringContextRule.builder().withConfig(ThrowingConfig.class).build();
+        springContext = SpringContext.builder().withConfig(SimpleConfig.class).build();
+        badSpringContext = SpringContext.builder().withConfig(ThrowingConfig.class).build();
     }
 
     @Test
     public void canRetrieveBeanFromContext() throws Throwable {
         final Object[] holder = new Object[1];
-        springContextRule.apply(new Statement() {
+        springContext.apply(new Statement() {
             @Override
             public void evaluate() {
-                holder[0] = springContextRule.getApplicationContext().getBean("stringBean");
+                holder[0] = springContext.getApplicationContext().getBean("stringBean");
             }
         }, Description.EMPTY).evaluate();
         assertEquals("it's a string", holder[0]);
@@ -65,7 +65,7 @@ public class SpringContextRuleTest {
     @Test
     public void underlyingStatementIsEvaluated() throws Throwable {
         final Statement statement = mock(Statement.class);
-        final Statement wrappedStatement = springContextRule.apply(statement, Description.EMPTY);
+        final Statement wrappedStatement = springContext.apply(statement, Description.EMPTY);
         wrappedStatement.evaluate();
         verify(statement, times(1)).evaluate();
     }
@@ -73,7 +73,7 @@ public class SpringContextRuleTest {
     @Test
     public void underlyingStatementIsNotEvaluatedIfContextFailsToStart() throws Throwable {
         final Statement statement = mock(Statement.class);
-        final Statement wrappedStatement = badSpringContextRule.apply(statement, Description.EMPTY);
+        final Statement wrappedStatement = badSpringContext.apply(statement, Description.EMPTY);
         try {
             wrappedStatement.evaluate();
         } catch (Throwable ignored) {
@@ -85,7 +85,7 @@ public class SpringContextRuleTest {
     @Test
     public void failureToStartIsPropagatedOnEvaluation() throws Throwable {
         final Statement statement = mock(Statement.class);
-        final Statement wrappedStatement = badSpringContextRule.apply(statement, Description.EMPTY);
+        final Statement wrappedStatement = badSpringContext.apply(statement, Description.EMPTY);
         expectedException.expect(rootCause(hasMessage(equalTo("bad, bad, bad"))));
         wrappedStatement.evaluate();
     }
@@ -94,7 +94,7 @@ public class SpringContextRuleTest {
     public void cannotGetApplicationContextOutsideOfEvaluation() {
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("no spring application context, are you calling getApplicationContext() outside of a test execution");
-        springContextRule.getApplicationContext();
+        springContext.getApplicationContext();
     }
 
     private Matcher<Throwable> rootCause(final Matcher<? super Throwable> throwableMatcher) {
