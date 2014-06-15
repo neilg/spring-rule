@@ -26,8 +26,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SpringContextRuleIT {
 
@@ -35,6 +37,19 @@ public class SpringContextRuleIT {
     public SpringContextRule springContextRule = SpringContextRule.builder()
             .withConfig(SimpleConfig.class)
             .build();
+
+    @Autowired
+    public String stringBean;
+
+    @Before
+    public void autowire() {
+        springContextRule.autowire(this);
+    }
+
+    @Test
+    public void canAutowire() {
+        assertThat(stringBean, is("it's a string"));
+    }
 
     @Test
     public void canRetrieveBeanFromContext() {

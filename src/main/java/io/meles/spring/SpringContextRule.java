@@ -119,6 +119,10 @@ public class SpringContextRule implements TestRule, BeanFactory {
 
     // End of BeanFactory implementation
 
+    public void autowire(Object object) {
+        getApplicationContext().getAutowireCapableBeanFactory().autowireBean(object);
+    }
+
     public static Builder builder() {
         return new Builder();
     }
