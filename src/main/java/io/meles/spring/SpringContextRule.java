@@ -28,10 +28,13 @@ import java.util.List;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class SpringContextRule implements TestRule {
+public class SpringContextRule implements TestRule, BeanFactory {
 
     private final Class<?>[] config;
     private ApplicationContext applicationContext;
@@ -48,13 +51,76 @@ public class SpringContextRule implements TestRule {
                 try (AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(config)) {
                     SpringContextRule.this.applicationContext = applicationContext;
                     base.evaluate();
+                } finally {
+                    applicationContext = null;
                 }
             }
         };
     }
 
     public ApplicationContext getApplicationContext() {
+        if (applicationContext == null) {
+            throw new IllegalStateException("no spring application context, are you calling getApplicationContext() outside of a test execution");
+        }
         return applicationContext;
+    }
+
+    // BeanFactory implementation
+
+    @Override
+    public Object getBean(String name) throws BeansException {
+        return getApplicationContext().getBean(name);
+    }
+
+    @Override
+    public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
+        return getApplicationContext().getBean(name, requiredType);
+    }
+
+    @Override
+    public <T> T getBean(Class<T> requiredType) throws BeansException {
+        return getApplicationContext().getBean(requiredType);
+    }
+
+    @Override
+    public Object getBean(String name, Object... args) throws BeansException {
+        return getApplicationContext().getBean(name, args);
+    }
+
+    @Override
+    public boolean containsBean(String name) {
+        return getApplicationContext().containsBean(name);
+    }
+
+    @Override
+    public boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().isSingleton(name);
+    }
+
+    @Override
+    public boolean isPrototype(String name) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().isPrototype(name);
+    }
+
+    @Override
+    public boolean isTypeMatch(String name, Class<?> targetType) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().isTypeMatch(name, targetType);
+    }
+
+    @Override
+    public Class<?> getType(String name) throws NoSuchBeanDefinitionException {
+        return getApplicationContext().getType(name);
+    }
+
+    @Override
+    public String[] getAliases(String name) {
+        return getApplicationContext().getAliases(name);
+    }
+
+    // End of BeanFactory implementation
+
+    public void autowire(Object object) {
+        getApplicationContext().getAutowireCapableBeanFactory().autowireBean(object);
     }
 
     public static Builder builder() {
@@ -68,6 +134,7 @@ public class SpringContextRule implements TestRule {
         /**
          * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
          *
+         * @param configClasses the spring config classes to use
          * @return this Builder
          */
         public Builder withConfig(Class... configClasses) {
@@ -77,6 +144,7 @@ public class SpringContextRule implements TestRule {
         /**
          * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
          *
+         * @param configClasses the spring config classes to use
          * @return this Builder
          */
         public Builder withConfig(Collection<Class> configClasses) {

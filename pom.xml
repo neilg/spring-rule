@@ -15,18 +15,16 @@
   ~ GNU General Public License for more details.
   ~
   ~ You should have received a copy of the GNU General Public License
-  ~ along with Meles Spring Rule.  If not, see <http://www.gnu.org/licenses/>.
+  ~ along with Meles Spring Rule.  If not, see <http://www.gnu.org/licenses />.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.meles</groupId>
     <artifactId>spring-rule</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <licenses>
         <license>
@@ -39,6 +37,19 @@
     <prerequisites>
         <maven>3</maven>
     </prerequisites>
+
+    <scm>
+        <!--<connection>scm:git:https://github.com/neilg/spring-rule.git</connection>-->
+        <developerConnection>scm:git:git@github.com:neilg/spring-rule.git</developerConnection>
+        <url>https://github.com/neilg/spring-rule</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Neil Green</name>
+            <timezone>Europe/London</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,14 +67,17 @@
         <maven-install-plugin.version>2.5.1</maven-install-plugin.version>
         <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
         <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <maven-jxr-plugin.version>2.4</maven-jxr-plugin.version>
+        <maven-pmd-plugin.version>3.1</maven-pmd-plugin.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
         <maven-site-plugin.version>3.3</maven-site-plugin.version>
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
         <findbugs-maven-plugin.version>2.5.4</findbugs-maven-plugin.version>
-        <pitest-plugin.version>1.0.0</pitest-plugin.version>
         <github.site-maven-plugin.version>0.9</github.site-maven-plugin.version>
+        <jgitflow-maven-plugin.version>1.0-m2</jgitflow-maven-plugin.version>
+        <pitest-plugin.version>1.0.0</pitest-plugin.version>
     </properties>
 
     <build>
@@ -100,6 +114,14 @@
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>${maven-jxr-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${maven-pmd-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -169,11 +191,28 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>${jgitflow-maven-plugin.version}</version>
+            </plugin>
         </plugins>
     </build>
 
     <reporting>
         <plugins>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <skipEmptyReport>false</skipEmptyReport>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
             </plugin>

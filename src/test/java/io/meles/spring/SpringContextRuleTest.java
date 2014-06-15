@@ -56,7 +56,7 @@ public class SpringContextRuleTest {
         springContextRule.apply(new Statement() {
             @Override
             public void evaluate() {
-                holder[0] = springContextRule.getApplicationContext().getBean("asdf");
+                holder[0] = springContextRule.getApplicationContext().getBean("stringBean");
             }
         }, Description.EMPTY).evaluate();
         assertEquals("it's a string", holder[0]);
@@ -88,6 +88,13 @@ public class SpringContextRuleTest {
         final Statement wrappedStatement = badSpringContextRule.apply(statement, Description.EMPTY);
         expectedException.expect(rootCause(hasMessage(equalTo("bad, bad, bad"))));
         wrappedStatement.evaluate();
+    }
+
+    @Test
+    public void cannotGetApplicationContextOutsideOfEvaluation() {
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("no spring application context, are you calling getApplicationContext() outside of a test execution");
+        springContextRule.getApplicationContext();
     }
 
     private Matcher<Throwable> rootCause(final Matcher<? super Throwable> throwableMatcher) {
