@@ -56,7 +56,7 @@ public class SpringContextRuleTest {
         springContextRule.apply(new Statement() {
             @Override
             public void evaluate() {
-                holder[0] = springContextRule.getApplicationContext().getBean("asdf");
+                holder[0] = springContextRule.getApplicationContext().getBean("stringBean");
             }
         }, Description.EMPTY).evaluate();
         assertEquals("it's a string", holder[0]);

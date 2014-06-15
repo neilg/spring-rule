@@ -19,13 +19,39 @@
 
 package io.meles.spring;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 @Configuration
 public class SimpleConfig {
+
     @Bean
-    public String asdf() {
+    public Integer onlyOneInteger() {
+        return 1;
+    }
+
+    @Bean(name = {"stringBean", "stringBeanAlias"})
+    public String stringBean() {
         return "it's a string";
     }
+
+    @Bean
+    public String singletonString() {
+        return "this is a singleton string";
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public String prototypeString() {
+        return "this is a prototype string";
+    }
+
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public String prototypeStringWithArg(Integer integer) {
+        return String.valueOf(integer);
+    }
+
 }
