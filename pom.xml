@@ -318,6 +318,7 @@
                             <message>Creating site for ${project.version}</message>
                             <repositoryOwner>neilg</repositoryOwner>
                             <repositoryName>spring-rule</repositoryName>
+                            <path>${project.version}</path>
                         </configuration>
                         <executions>
                             <execution>
