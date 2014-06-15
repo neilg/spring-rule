@@ -31,6 +31,7 @@ import org.junit.runners.model.Statement;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -58,6 +59,10 @@ public class SpringContextRule implements TestRule, BeanFactory {
         };
     }
 
+    /**
+     * @return the active spring application context (if there is one)
+     * @throws java.lang.IllegalStateException if there is no active context
+     */
     public ApplicationContext getApplicationContext() {
         if (applicationContext == null) {
             throw new IllegalStateException("no spring application context, are you calling getApplicationContext() outside of a test execution");
@@ -119,8 +124,19 @@ public class SpringContextRule implements TestRule, BeanFactory {
 
     // End of BeanFactory implementation
 
+    /**
+     * Perform autowiring of the provided object. Fields annotated with <code>@Autowired</code> will be set from the
+     * spring context. This method can be called from a method annotated with <code>@Before</code>.
+     *
+     * @param object the object to autowire
+     * @throws java.lang.IllegalStateException if the spring context isn't active
+     */
     public void autowire(Object object) {
-        getApplicationContext().getAutowireCapableBeanFactory().autowireBean(object);
+        getAutowireCapableBeanFactory().autowireBean(object);
+    }
+
+    private AutowireCapableBeanFactory getAutowireCapableBeanFactory() {
+        return getApplicationContext().getAutowireCapableBeanFactory();
     }
 
     public static Builder builder() {
