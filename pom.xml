@@ -45,6 +45,11 @@
         <url>https://github.com/neilg/spring-rule</url>
     </scm>
 
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/neilg/spring-rule/issues</url>
+    </issueManagement>
+
     <developers>
         <developer>
             <name>Neil Green</name>
