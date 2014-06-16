@@ -35,9 +35,11 @@ autowiring.
     @Autowired
     private BarRepository;
     
-    @Before
-    public void autowire() {
-        springContext.autowire(this);
-    }
+    @Rule
+    public SpringContext springContext = SpringContext.builder()
+            .withConfig(SomeConfig.class, MoreConfig.class)
+            .autowire(this)
+            .build();
+    
     
 

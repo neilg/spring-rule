@@ -20,8 +20,10 @@
 package io.meles.spring;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,10 +40,13 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class SpringContext implements TestRule, BeanFactory {
 
     private final Class<?>[] configClasses;
+    private final List<Object> autowireTargets;
+
     private ApplicationContext applicationContext;
 
     private SpringContext(final Builder builder) {
         this.configClasses = builder.configClasses.toArray(new Class[builder.configClasses.size()]);
+        this.autowireTargets = unmodifiableList(new ArrayList<>(builder.autowireTargets));
     }
 
     @Override
@@ -49,8 +54,13 @@ public class SpringContext implements TestRule, BeanFactory {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                try (AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(configClasses)) {
+                final Class<?>[] configClassesCopy = Arrays.copyOf(configClasses, configClasses.length);
+                try (final AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(configClassesCopy)) {
                     SpringContext.this.applicationContext = applicationContext;
+                    for (final Object autowireTarget : autowireTargets) {
+                        autowire(autowireTarget);
+                    }
+
                     base.evaluate();
                 } finally {
                     applicationContext = null;
@@ -146,6 +156,7 @@ public class SpringContext implements TestRule, BeanFactory {
     public static class Builder {
 
         private List<Class> configClasses = new ArrayList<>();
+        private List<Object> autowireTargets = new ArrayList<>();
 
         /**
          * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
@@ -176,6 +187,11 @@ public class SpringContext implements TestRule, BeanFactory {
          */
         public Builder addConfig(Class... configClasses) {
             return addConfig(asList(configClasses));
+        }
+
+        public Builder autowire(Object... targets) {
+            this.autowireTargets.addAll(asList(targets));
+            return this;
         }
 
         /**

@@ -26,7 +26,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +35,11 @@ public class SpringRuleIT {
     @Rule
     public SpringContext springContext = SpringContext.builder()
             .withConfig(SimpleConfig.class)
+            .autowire(this)
             .build();
 
     @Autowired
     public String stringBean;
-
-    @Before
-    public void autowire() {
-        springContext.autowire(this);
-    }
 
     @Test
     public void canAutowire() {
