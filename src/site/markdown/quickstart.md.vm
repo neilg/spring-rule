@@ -1,6 +1,6 @@
 # Quickstart
 
-Add ${project.artifactId} to your project's pom
+Add ${project.artifactId} to your project's pom.
 
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -8,7 +8,7 @@ Add ${project.artifactId} to your project's pom
       <version>${project.version}</version>
     </dependency>
 
-Then write a test that needs a spring context
+Then write a test that needs a spring context.
 
     public class SomeTest {
     
@@ -26,8 +26,8 @@ Then write a test that needs a spring context
         
     }
 
-But I don't want to keep retrieving beans from the SpringContext. Don't worry, the SpringContext rule
-[supports autowiring](./apidocs/io/meles/spring/SpringContext.html#autowire%28java.lang.Object%29).
+But I don't want to keep retrieving beans from the SpringContext. Don't worry, the SpringContext rule supports
+autowiring.
     
     @Autowired
     private FooService fooService;
