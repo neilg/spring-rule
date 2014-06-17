@@ -56,29 +56,19 @@ public class SpringContext implements TestRule, BeanFactory {
         this.beans = unmodifiableMap(new HashMap<>(builder.beans));
     }
 
-    private AnnotationConfigApplicationContext createContext() {
-        final DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
-        for (final Entry<String, Object> bean : beans.entrySet()) {
-            factory.registerSingleton(bean.getKey(), bean.getValue());
-        }
-        final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(factory);
-        if (configClasses.length > 0) {
-            context.register(Arrays.copyOf(configClasses, configClasses.length));
-        }
-        context.refresh();
-        return context;
-    }
-
     @Override
     public Statement apply(final Statement base, final Description description) {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                try (final AnnotationConfigApplicationContext applicationContext = createContext()) {
+                final DefaultListableBeanFactory factory = createBeanFactoryWithSingletons();
+
+                try (final AnnotationConfigApplicationContext applicationContext
+                             = new AnnotationConfigApplicationContext(factory)) {
+
+                    registerConfig(applicationContext);
                     SpringContext.this.applicationContext = applicationContext;
-                    for (final Object autowireTarget : autowireTargets) {
-                        autowire(autowireTarget);
-                    }
+                    performAutowiring();
 
                     base.evaluate();
                 } finally {
@@ -86,6 +76,27 @@ public class SpringContext implements TestRule, BeanFactory {
                 }
             }
         };
+    }
+
+    private void performAutowiring() {
+        for (final Object autowireTarget : autowireTargets) {
+            autowire(autowireTarget);
+        }
+    }
+
+    private void registerConfig(AnnotationConfigApplicationContext applicationContext) {
+        if (configClasses.length > 0) {
+            applicationContext.register(Arrays.copyOf(configClasses, configClasses.length));
+        }
+        applicationContext.refresh();
+    }
+
+    private DefaultListableBeanFactory createBeanFactoryWithSingletons() {
+        final DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+        for (final Entry<String, Object> bean : beans.entrySet()) {
+            factory.registerSingleton(bean.getKey(), bean.getValue());
+        }
+        return factory;
     }
 
     /**
