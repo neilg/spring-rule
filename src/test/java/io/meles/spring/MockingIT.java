@@ -45,6 +45,7 @@ public class MockingIT {
     @Rule
     public SpringContext springContext = SpringContext.builder()
             .withConfig(MockConfig.class)
+            .autowire(this)
             .build();
 
     @Autowired
@@ -55,9 +56,6 @@ public class MockingIT {
 
     @Before
     public void setupMocks() {
-        // this should inject the mock FooRepository
-        springContext.autowire(this);
-
         // specify the behaviour of the mocks
         loadedFoo = new Foo();
         savedFoo = new Foo();
