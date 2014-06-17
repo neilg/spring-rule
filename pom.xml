@@ -207,10 +207,6 @@
             <plugin>
                 <artifactId>maven-surefire-report-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-            </plugin>
         </plugins>
     </reporting>
 
@@ -282,6 +278,20 @@
     </dependencies>
 
     <profiles>
+        <profile>
+            <id>skip_findbugs_on_jdk_1.8</id>
+            <activation>
+                <jdk>!1.8</jdk>
+            </activation>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
         <profile>
             <id>travis</id>
             <activation>
