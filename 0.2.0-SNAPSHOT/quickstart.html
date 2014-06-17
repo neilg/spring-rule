@@ -272,36 +272,7 @@ private BarRepository;
 public SpringContext springContext = SpringContext.builder()
         .withConfig(SomeConfig.class, MoreConfig.class)
         .autowire(this)
-        .build();</pre></div></div>
-<div class="section">
-<h3>Mocks<a name="Mocks"></a></h3>
-<p>It's straightforward to use mock objects as beans in a SpringContext.</p>
-<div class="source">
-<pre>import static org.mockito.Mockito.*
-
-public class TestWithMocks {
-
-    @Configuration
-    public static class MockConfig {
-        @Bean
-        public FooRepository fooRepository() {
-            return mock(FooRepository.class);
-        }
-    }
-
-    @Rule
-    public SpringContext springContext = SpringContext.builder()
-            .withConfig(ServiceConfig.class, MockConfig.class)
-            .build();
-
-    @Test
-    public void systemShouldBehaveInSomeManner() {
-        final FooRepository mockFooRepository = springContext.getBean(FooRepository.class);
-        final Foo xyzFoo = ....
-        when(mockFooRepository.load(&quot;xyz&quot;)).thenReturn(xyzFoo);
-        ...
-    }
-}</pre></div></div></div>
+        .build();</pre></div></div></div>
                   </div>
             </div>
           </div>
