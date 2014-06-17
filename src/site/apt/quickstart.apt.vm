@@ -1,0 +1,55 @@
+                ----------
+                Quickstart
+                ----------
+
+Quickstart
+
+  Add ${project.artifactId} to your project's pom.
+
++--
+<dependency>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${project.version}</version>
+</dependency>
++--
+
+  Then write a test that needs a spring context.
+
++--
+public class SomeTest {
+
+    @Rule
+    public SpringContext springContext = SpringContext.builder()
+            .withConfig(SomeConfig.class, MoreConfig.class)
+            .build();
+
+    @Test
+    public void someTestUsingFooService() {
+        FooService fooService = springContext.getBean(FooService.class);
+        Object result = fooService.performAction();
+        // various assertions
+    }
+
+}
++--
+
+* Autowiring
+
+  But I don't want to keep retrieving beans from the SpringContext. Don't worry, the SpringContext rule supports autowiring.
+
++--
+@Autowired
+private FooService fooService;
+
+@Autowired
+private BarRepository;
+
+@Rule
+public SpringContext springContext = SpringContext.builder()
+        .withConfig(SomeConfig.class, MoreConfig.class)
+        .autowire(this)
+        .build();
++--
+
+
