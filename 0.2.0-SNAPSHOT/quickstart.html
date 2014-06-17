@@ -143,7 +143,7 @@
           <div id="banner">
         <div class="pull-left">
                                 <div id="bannerLeft">
-                <h2>spring-rule</h2>
+                <h2>Meles Spring Rule</h2>
                 </div>
                       </div>
         <div class="pull-right">  </div>
@@ -234,7 +234,7 @@
                                   
             <div class="section">
 <h2>Quickstart<a name="Quickstart"></a></h2>
-<p>Add spring-rule to your project's pom.</p>
+<p>Add spring-rule to your project. If you're using Maven add the following dependency to your pom. (You can also use Meles Spring Rule with <a href="./dependency-info.html">other build systems</a>.)</p>
 <div class="source">
 <pre>&lt;dependency&gt;
   &lt;groupId&gt;io.meles&lt;/groupId&gt;
@@ -247,7 +247,7 @@
 
     @Rule
     public SpringContext springContext = SpringContext.builder()
-            .withConfig(SomeConfig.class, MoreConfig.class)
+            .config(SomeConfig.class, MoreConfig.class)
             .build();
 
     @Test
@@ -270,28 +270,31 @@ private BarRepository;
 
 @Rule
 public SpringContext springContext = SpringContext.builder()
-        .withConfig(SomeConfig.class, MoreConfig.class)
+        .config(SomeConfig.class, MoreConfig.class)
+        .autowire(this)
+        .build();</pre></div></div>
+<div class="section">
+<h3>Additional Beans<a name="Additional_Beans"></a></h3>
+<p>Additional singleton beans can be provided to the SpringContext by calling the singleton method.</p>
+<div class="source">
+<pre>@Rule
+public SpringContext springContext = SpringContext.builder()
+        .config(SomeConfig.class, MoreConfig.class)
+        .singleton(&quot;someBean&quot;, new SomeBean())
         .autowire(this)
         .build();</pre></div></div>
 <div class="section">
 <h3>Mocks<a name="Mocks"></a></h3>
-<p>It's straightforward to use mock objects as beans in a SpringContext.</p>
+<p>Mocks can be provided to the SpringContext as additional singletons.</p>
 <div class="source">
 <pre>import static org.mockito.Mockito.*
 
 public class TestWithMocks {
 
-    @Configuration
-    public static class MockConfig {
-        @Bean
-        public FooRepository fooRepository() {
-            return mock(FooRepository.class);
-        }
-    }
-
     @Rule
     public SpringContext springContext = SpringContext.builder()
-            .withConfig(ServiceConfig.class, MockConfig.class)
+            .config(ServiceConfig.class, MockConfig.class)
+            .singleton(&quot;fooRepository&quot;, mock(FooRepository.class))
             .build();
 
     @Test
