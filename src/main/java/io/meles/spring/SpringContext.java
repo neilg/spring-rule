@@ -21,11 +21,15 @@ package io.meles.spring;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -34,6 +38,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -41,12 +46,27 @@ public class SpringContext implements TestRule, BeanFactory {
 
     private final Class<?>[] configClasses;
     private final List<Object> autowireTargets;
+    private final Map<String, Object> beans;
 
     private ApplicationContext applicationContext;
 
     private SpringContext(final Builder builder) {
         this.configClasses = builder.configClasses.toArray(new Class[builder.configClasses.size()]);
         this.autowireTargets = unmodifiableList(new ArrayList<>(builder.autowireTargets));
+        this.beans = unmodifiableMap(new HashMap<>(builder.beans));
+    }
+
+    private AnnotationConfigApplicationContext createContext() {
+        final DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+        for (final Entry<String, Object> bean : beans.entrySet()) {
+            factory.registerSingleton(bean.getKey(), bean.getValue());
+        }
+        final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(factory);
+        if (configClasses.length > 0) {
+            context.register(Arrays.copyOf(configClasses, configClasses.length));
+        }
+        context.refresh();
+        return context;
     }
 
     @Override
@@ -54,8 +74,7 @@ public class SpringContext implements TestRule, BeanFactory {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                final Class<?>[] configClassesCopy = Arrays.copyOf(configClasses, configClasses.length);
-                try (final AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(configClassesCopy)) {
+                try (final AnnotationConfigApplicationContext applicationContext = createContext()) {
                     SpringContext.this.applicationContext = applicationContext;
                     for (final Object autowireTarget : autowireTargets) {
                         autowire(autowireTarget);
@@ -155,28 +174,18 @@ public class SpringContext implements TestRule, BeanFactory {
 
     public static class Builder {
 
-        private List<Class> configClasses = new ArrayList<>();
-        private List<Object> autowireTargets = new ArrayList<>();
+        private final List<Class<?>> configClasses = new ArrayList<>();
+        private final List<Object> autowireTargets = new ArrayList<>();
+        private final Map<String, Object> beans = new HashMap<>();
 
         /**
-         * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
+         * Add <code>configClasses</code> to this <code>Builder</code>'s list of config <code>Class</code>es.
          *
-         * @param configClasses the spring config classes to use
+         * @param configClasses the spring config classes to add
          * @return this Builder
          */
-        public Builder withConfig(Class... configClasses) {
-            return withConfig(asList(configClasses));
-        }
-
-        /**
-         * Replace this <code>Builder</code>'s list of config <code>Class</code>es.
-         *
-         * @param configClasses the spring config classes to use
-         * @return this Builder
-         */
-        public Builder withConfig(Collection<Class> configClasses) {
-            this.configClasses = new ArrayList<>(configClasses);
-            return this;
+        public Builder config(final Class<?>... configClasses) {
+            return config(asList(configClasses));
         }
 
         /**
@@ -185,17 +194,7 @@ public class SpringContext implements TestRule, BeanFactory {
          * @param configClasses the spring config classes to add
          * @return this Builder
          */
-        public Builder addConfig(Class... configClasses) {
-            return addConfig(asList(configClasses));
-        }
-
-        /**
-         * Add <code>configClasses</code> to this <code>Builder</code>'s list of config <code>Class</code>es.
-         *
-         * @param configClasses the spring config classes to add
-         * @return this Builder
-         */
-        private Builder addConfig(Collection<Class> configClasses) {
+        private Builder config(final Collection<Class<?>> configClasses) {
             this.configClasses.addAll(configClasses);
             return this;
         }
@@ -206,8 +205,23 @@ public class SpringContext implements TestRule, BeanFactory {
          * @param targets the objects to autowire
          * @return this Builder
          */
-        public Builder autowire(Object... targets) {
-            this.autowireTargets.addAll(asList(targets));
+        public Builder autowire(final Object... targets) {
+            return autowire(asList(targets));
+        }
+
+        /**
+         * Add the provided objects as autowire targets.
+         *
+         * @param targets the objects to autowire
+         * @return this Builder
+         */
+        public Builder autowire(final Collection<Object> targets) {
+            this.autowireTargets.addAll(targets);
+            return this;
+        }
+
+        public Builder singleton(final String name, final Object bean) {
+            this.beans.put(name, bean);
             return this;
         }
 

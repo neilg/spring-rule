@@ -50,12 +50,21 @@ public class SpringContextTest {
     @Before
     public void createRules() {
         springContext = SpringContext.builder()
-                .withConfig(SimpleConfig.class)
-                .addConfig(ExtraConfig.class)
+                .config(SimpleConfig.class)
+                .config(ExtraConfig.class)
                 .build();
         badSpringContext = SpringContext.builder()
-                .withConfig(ThrowingConfig.class)
+                .config(ThrowingConfig.class)
                 .build();
+    }
+
+    @Test
+    public void canBuildASpringContextWithNoConfig() throws Throwable {
+        final Statement statement = mock(Statement.class);
+        SpringContext.builder()
+                .build()
+                .apply(statement, Description.EMPTY)
+                .evaluate();
     }
 
     @Test

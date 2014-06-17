@@ -29,27 +29,20 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 public class MockingIT {
 
-    @Configuration
-    public static class MockConfig {
-        @Bean
-        public FooRepository fooRepository() {
-            return mock(FooRepository.class);
-        }
-    }
-
     @Rule
     public SpringContext springContext = SpringContext.builder()
-            .withConfig(MockConfig.class)
+            .config(SimpleConfig.class, BarConfig.class)
+            .singleton("fooRepository", mock(FooRepository.class))
             .autowire(this)
             .build();
 
     @Autowired
     private FooRepository mockFooRepository;
+    @Autowired
+    private BarService barService;
 
     private Foo loadedFoo;
     private Foo savedFoo;
@@ -65,7 +58,7 @@ public class MockingIT {
 
     @Test
     public void canUseMocks() {
-        assertThat(mockFooRepository.load("123asdf"), is(loadedFoo));
+        assertThat(barService.findMeAFoo("123asdf"), is(loadedFoo));
     }
 
 }

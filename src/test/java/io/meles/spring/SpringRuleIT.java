@@ -34,7 +34,7 @@ public class SpringRuleIT {
 
     @Rule
     public SpringContext springContext = SpringContext.builder()
-            .withConfig(SimpleConfig.class)
+            .config(SimpleConfig.class)
             .autowire(this)
             .build();
 

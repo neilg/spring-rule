@@ -22,7 +22,7 @@ public class SomeTest {
 
     @Rule
     public SpringContext springContext = SpringContext.builder()
-            .withConfig(SomeConfig.class, MoreConfig.class)
+            .config(SomeConfig.class, MoreConfig.class)
             .build();
 
     @Test
@@ -49,31 +49,37 @@ private BarRepository;
 
 @Rule
 public SpringContext springContext = SpringContext.builder()
-        .withConfig(SomeConfig.class, MoreConfig.class)
+        .config(SomeConfig.class, MoreConfig.class)
+        .autowire(this)
+        .build();
++--
+
+* Additional Beans
+
+    Additional singleton beans can be provided to the SpringContext by calling the singleton method.
+
++--
+@Rule
+public SpringContext springContext = SpringContext.builder()
+        .config(SomeConfig.class, MoreConfig.class)
+        .singleton("someBean", new SomeBean())
         .autowire(this)
         .build();
 +--
 
 * Mocks
 
-    It's straightforward to use mock objects as beans in a SpringContext.
+    Mocks can be provided to the SpringContext as additional singletons.
 
 +--
 import static org.mockito.Mockito.*
 
 public class TestWithMocks {
 
-    @Configuration
-    public static class MockConfig {
-        @Bean
-        public FooRepository fooRepository() {
-            return mock(FooRepository.class);
-        }
-    }
-
     @Rule
     public SpringContext springContext = SpringContext.builder()
-            .withConfig(ServiceConfig.class, MockConfig.class)
+            .config(ServiceConfig.class, MockConfig.class)
+            .singleton("fooRepository", mock(FooRepository.class))
             .build();
 
     @Test
