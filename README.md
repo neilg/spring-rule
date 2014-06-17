@@ -3,6 +3,7 @@
 A [JUnit rule](https://github.com/junit-team/junit/wiki/Rules) to manage [Spring](https://spring.io) contexts within a test class.
 
 ## Using
+See the [documentation](http://neilg.github.io/spring-rule/0.2.0-SNAPSHOT/index.html).
 
 ```java
 public class SomeTest {
