@@ -26,6 +26,7 @@
     <groupId>io.meles</groupId>
     <artifactId>spring-rule</artifactId>
     <version>0.2.0-SNAPSHOT</version>
+    <name>Meles Spring Rule</name>
 
     <licenses>
         <license>

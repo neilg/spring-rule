@@ -1,0 +1,13 @@
+                ------------
+                Introduction
+                ------------
+
+${project.name}
+
+    ${project.name} is a {{{http://junit.org/}JUnit}} Rule for managing {{{http://spring.io/}Spring}} contexts. Spring
+    Rule doesn't require you to use a particular test Runner and gives you programmatic control over the creation of the
+    Spring context.
+
+* Getting Started
+
+    See the {{{./quickstart.html}quickstart}} guide for details of how to get started with ${project.name}.
