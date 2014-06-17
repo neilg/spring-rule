@@ -189,11 +189,6 @@ public class SpringContext implements TestRule, BeanFactory {
             return addConfig(asList(configClasses));
         }
 
-        public Builder autowire(Object... targets) {
-            this.autowireTargets.addAll(asList(targets));
-            return this;
-        }
-
         /**
          * Add <code>configClasses</code> to this <code>Builder</code>'s list of config <code>Class</code>es.
          *
@@ -202,6 +197,16 @@ public class SpringContext implements TestRule, BeanFactory {
          */
         private Builder addConfig(Collection<Class> configClasses) {
             this.configClasses.addAll(configClasses);
+            return this;
+        }
+
+        /**
+         * Add the provided objects as autowire targets.
+         * @param targets the objects to autowire
+         * @return this Builder
+         */
+        public Builder autowire(Object... targets) {
+            this.autowireTargets.addAll(asList(targets));
             return this;
         }
 
