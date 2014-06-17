@@ -202,6 +202,7 @@ public class SpringContext implements TestRule, BeanFactory {
 
         /**
          * Add the provided objects as autowire targets.
+         *
          * @param targets the objects to autowire
          * @return this Builder
          */
