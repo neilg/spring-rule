@@ -197,27 +197,32 @@
 <a class="jxr_linenumber" name="L189" href="#L189">189</a>             <strong class="jxr_keyword">return</strong> addConfig(asList(configClasses));
 <a class="jxr_linenumber" name="L190" href="#L190">190</a>         }
 <a class="jxr_linenumber" name="L191" href="#L191">191</a> 
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>         <strong class="jxr_keyword">public</strong> <a href="../../../io/meles/spring/SpringContext.html">Builder</a> autowire(Object... targets) {
-<a class="jxr_linenumber" name="L193" href="#L193">193</a>             <strong class="jxr_keyword">this</strong>.autowireTargets.addAll(asList(targets));
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L195" href="#L195">195</a>         }
-<a class="jxr_linenumber" name="L196" href="#L196">196</a> 
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L198" href="#L198">198</a> <em class="jxr_javadoccomment">         * Add &lt;code&gt;configClasses&lt;/code&gt; to this &lt;code&gt;Builder&lt;/code&gt;'s list of config &lt;code&gt;Class&lt;/code&gt;es.</em>
-<a class="jxr_linenumber" name="L199" href="#L199">199</a> <em class="jxr_javadoccomment">         *</em>
-<a class="jxr_linenumber" name="L200" href="#L200">200</a> <em class="jxr_javadoccomment">         * @param configClasses the spring config classes to add</em>
-<a class="jxr_linenumber" name="L201" href="#L201">201</a> <em class="jxr_javadoccomment">         * @return this Builder</em>
-<a class="jxr_linenumber" name="L202" href="#L202">202</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="L203" href="#L203">203</a>         <strong class="jxr_keyword">private</strong> <a href="../../../io/meles/spring/SpringContext.html">Builder</a> addConfig(Collection&lt;Class&gt; configClasses) {
-<a class="jxr_linenumber" name="L204" href="#L204">204</a>             <strong class="jxr_keyword">this</strong>.configClasses.addAll(configClasses);
-<a class="jxr_linenumber" name="L205" href="#L205">205</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L206" href="#L206">206</a>         }
-<a class="jxr_linenumber" name="L207" href="#L207">207</a> 
-<a class="jxr_linenumber" name="L208" href="#L208">208</a>         <strong class="jxr_keyword">public</strong> <a href="../../../io/meles/spring/SpringContext.html">SpringContext</a> build() {
-<a class="jxr_linenumber" name="L209" href="#L209">209</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../io/meles/spring/SpringContext.html">SpringContext</a>(<strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L210" href="#L210">210</a>         }
-<a class="jxr_linenumber" name="L211" href="#L211">211</a>     }
-<a class="jxr_linenumber" name="L212" href="#L212">212</a> }
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L193" href="#L193">193</a> <em class="jxr_javadoccomment">         * Add &lt;code&gt;configClasses&lt;/code&gt; to this &lt;code&gt;Builder&lt;/code&gt;'s list of config &lt;code&gt;Class&lt;/code&gt;es.</em>
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> <em class="jxr_javadoccomment">         *</em>
+<a class="jxr_linenumber" name="L195" href="#L195">195</a> <em class="jxr_javadoccomment">         * @param configClasses the spring config classes to add</em>
+<a class="jxr_linenumber" name="L196" href="#L196">196</a> <em class="jxr_javadoccomment">         * @return this Builder</em>
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>         <strong class="jxr_keyword">private</strong> <a href="../../../io/meles/spring/SpringContext.html">Builder</a> addConfig(Collection&lt;Class&gt; configClasses) {
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>             <strong class="jxr_keyword">this</strong>.configClasses.addAll(configClasses);
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>         }
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> 
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> <em class="jxr_javadoccomment">         * Add the provided objects as autowire targets.</em>
+<a class="jxr_linenumber" name="L205" href="#L205">205</a> <em class="jxr_javadoccomment">         * @param targets the objects to autowire</em>
+<a class="jxr_linenumber" name="L206" href="#L206">206</a> <em class="jxr_javadoccomment">         * @return this Builder</em>
+<a class="jxr_linenumber" name="L207" href="#L207">207</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="L208" href="#L208">208</a>         <strong class="jxr_keyword">public</strong> <a href="../../../io/meles/spring/SpringContext.html">Builder</a> autowire(Object... targets) {
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>             <strong class="jxr_keyword">this</strong>.autowireTargets.addAll(asList(targets));
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         }
+<a class="jxr_linenumber" name="L212" href="#L212">212</a> 
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         <strong class="jxr_keyword">public</strong> <a href="../../../io/meles/spring/SpringContext.html">SpringContext</a> build() {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../io/meles/spring/SpringContext.html">SpringContext</a>(<strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         }
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>     }
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2014. All rights reserved.</div>
