@@ -1,6 +1,7 @@
 language: java
+before_install: "git clone -b travis-settings `git config --get remote.origin.url` target/travis-settings"
 install: true
-script: mvn clean deploy
+script: mvn clean deploy --settings target/travis-settings/settings.xml
 after_script:
 - mvn site -Dgithub.global.oauth2Token=${GITHUB_TOKEN}
 jdk:
