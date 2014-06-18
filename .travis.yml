@@ -1,7 +1,7 @@
 language: java
-before_install: "git clone -b travis-settings `git config --get remote.origin.url` target/travis-settings"
+before_install: "curl https://raw.githubusercontent.com/meles-software/meles-maven-settings/0.1/settings.xml > settings.xml"
 install: true
-script: mvn clean deploy --settings target/travis-settings/settings.xml
+script: mvn clean deploy --settings settings.xml
 after_script:
 - mvn site -Dgithub.global.oauth2Token=${GITHUB_TOKEN}
 jdk:
