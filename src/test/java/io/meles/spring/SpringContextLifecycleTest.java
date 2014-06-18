@@ -19,8 +19,8 @@
 
 package io.meles.spring;
 
+import static io.meles.spring.RootCause.rootCause;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 import static org.mockito.Mockito.mock;
@@ -28,8 +28,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,7 +37,7 @@ import org.junit.runners.model.Statement;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-public class SpringContextTest {
+public class SpringContextLifecycleTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -59,12 +57,10 @@ public class SpringContextTest {
     }
 
     @Test
-    public void canBuildASpringContextWithNoConfig() throws Throwable {
-        final Statement statement = mock(Statement.class);
-        SpringContext.builder()
-                .build()
-                .apply(statement, Description.EMPTY)
-                .evaluate();
+    public void cannotGetApplicationContextOutsideOfEvaluation() {
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("no spring application context, are you calling getApplicationContext() outside of a test execution");
+        springContext.getApplicationContext();
     }
 
     @Test
@@ -80,27 +76,16 @@ public class SpringContextTest {
     }
 
     @Test
-    public void canRetrieveBeanFromContext() throws Throwable {
-        final Object[] holder = new Object[1];
+    public void contextIsClosedAfterEvaluation() throws Throwable {
+        final ApplicationContext[] holder = new ApplicationContext[1];
         springContext.apply(new Statement() {
             @Override
             public void evaluate() {
-                holder[0] = springContext.getApplicationContext().getBean("stringBean");
+                holder[0] = springContext.getApplicationContext();
             }
         }, Description.EMPTY).evaluate();
-        assertEquals("it's a string", holder[0]);
-    }
-
-    @Test
-    public void canGetBeanFromAddedConfig() throws Throwable {
-        final Object[] holder = new Object[1];
-        springContext.apply(new Statement() {
-            @Override
-            public void evaluate() {
-                holder[0] = springContext.getApplicationContext().getBean("extraString");
-            }
-        }, Description.EMPTY).evaluate();
-        assertEquals("the extra string", holder[0]);
+        assertFalse(((ConfigurableApplicationContext) holder[0]).isActive());
+        assertFalse(((ConfigurableApplicationContext) holder[0]).isRunning());
     }
 
     @Test
@@ -131,46 +116,4 @@ public class SpringContextTest {
         wrappedStatement.evaluate();
     }
 
-    @Test
-    public void cannotGetApplicationContextOutsideOfEvaluation() {
-        expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("no spring application context, are you calling getApplicationContext() outside of a test execution");
-        springContext.getApplicationContext();
-    }
-
-    @Test
-    public void contextIsClosedAfterEvaluation() throws Throwable {
-        final ApplicationContext[] holder = new ApplicationContext[1];
-        springContext.apply(new Statement() {
-            @Override
-            public void evaluate() {
-                holder[0] = springContext.getApplicationContext();
-            }
-        }, Description.EMPTY).evaluate();
-        assertFalse(((ConfigurableApplicationContext) holder[0]).isActive());
-        assertFalse(((ConfigurableApplicationContext) holder[0]).isRunning());
-    }
-
-    private Matcher<Throwable> rootCause(final Matcher<? super Throwable> throwableMatcher) {
-        return new TypeSafeDiagnosingMatcher<Throwable>() {
-            @Override
-            protected boolean matchesSafely(Throwable item, org.hamcrest.Description mismatchDescription) {
-                Throwable cause = item;
-                while (cause.getCause() != null) {
-                    cause = cause.getCause();
-                }
-                final boolean matches = throwableMatcher.matches(cause);
-                if (!matches) {
-                    mismatchDescription.appendText("root cause ");
-                    throwableMatcher.describeMismatch(cause, mismatchDescription);
-                }
-                return matches;
-            }
-
-            @Override
-            public void describeTo(org.hamcrest.Description description) {
-                description.appendText("throwable with root cause ").appendDescriptionOf(throwableMatcher);
-            }
-        };
-    }
 }
