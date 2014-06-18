@@ -6,4 +6,6 @@ after_script:
 jdk:
 - openjdk7
 env:
-  secure: "ZsCMMv8C5WB7V5dB5jpTMKKeLrpZDJvMpitO5heG0b0vyM7CVHcPz+PYKV+pwsQpN2beHjpr1D5PqUe00+lR8DuMNvvYZhRd0WgbzMj+ZCC37kLqMt+Z7UjPIc6bbxfSlD/RmYHn9bmeC6HryAa6m85Nu1KGuiiUL+f13WfiqNg="
+  secure:
+    - "ZsCMMv8C5WB7V5dB5jpTMKKeLrpZDJvMpitO5heG0b0vyM7CVHcPz+PYKV+pwsQpN2beHjpr1D5PqUe00+lR8DuMNvvYZhRd0WgbzMj+ZCC37kLqMt+Z7UjPIc6bbxfSlD/RmYHn9bmeC6HryAa6m85Nu1KGuiiUL+f13WfiqNg="
+    - "kTlPHhALFHLXf7WxsWVh5h3WbjCcu2R+4Ige1Nfm1izCHzW6w4jSyAit22O4/8DNo+qO6ppxp6d1B2wzp4WLpu6d/Thsgr14kERYgK0YmAm5h8fVIOtnJGvvGIPk+hUdVpakgc9h9CGAtGvv+H4IB/SCSLShaWOviv2lJeIj7OM="
