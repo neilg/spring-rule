@@ -7,3 +7,6 @@ jdk:
 - openjdk7
 env:
   secure: YnRPDfRYhPd1FYg+WRQiTeidrHOuSAlGniwBZzcEyO7FQKo132zi30fivLMPto6YvLmZSAeBLJve+ietiwC4dCv/4fRKL4t8j7sWg6JkJ9D8OVOlhOb1s8jcH/56ud29VVkYTFn4RQuLCRBcZOma5IYmvEubLuZZClV0010aoMY=
+branches:
+  except:
+    - travis-settings
