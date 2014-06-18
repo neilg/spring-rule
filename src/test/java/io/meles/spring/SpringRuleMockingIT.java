@@ -43,8 +43,10 @@ public class SpringRuleMockingIT {
             .build();
 
     @Autowired
+    // The mock(FooRepository.class) will be wired in here.
     private FooRepository mockFooRepository;
     @Autowired
+    // The SpringContext will wire the mockFooRepository into this bean.
     private BarService barService;
 
     private Foo loadedFoo;
