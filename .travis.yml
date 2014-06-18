@@ -1,9 +1,9 @@
 language: java
 install: true
-script: mvn clean install
+script: mvn clean deploy
 after_script:
 - mvn site -Dgithub.global.oauth2Token=${GITHUB_TOKEN}
 jdk:
 - openjdk7
 env:
-  secure: W1oZAiyEobPiiRW1imQk+YoTvpwIwjjCFOLUQV3OTC36sc5CHyJIDu6/+Tta3LJS1zo4KqUCglwASypq2Pzg1gR340femIIz238lE+Mmj/qgRyKSB6iPnrKLLu3Yud2WwjDpgSOZxWDHyq9F6P3QhtvE0/PjvnJmsAgySeGBZZw=
+  secure: YnRPDfRYhPd1FYg+WRQiTeidrHOuSAlGniwBZzcEyO7FQKo132zi30fivLMPto6YvLmZSAeBLJve+ietiwC4dCv/4fRKL4t8j7sWg6JkJ9D8OVOlhOb1s8jcH/56ud29VVkYTFn4RQuLCRBcZOma5IYmvEubLuZZClV0010aoMY=
