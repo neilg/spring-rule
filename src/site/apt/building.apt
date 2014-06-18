@@ -11,3 +11,16 @@ Building
 +--
 mvn clean install
 +--
+
+* Mutation Coverage
+
+    ${project.name} uses {{{http://pitest.org/}PIT}} to mutation testing. If you're not familiar with mutation testing
+    then it's worth taking a moment to take a look at {{{http://pitest.org/}PIT}}.
+
+    To run the mutation testing
+
++--
+mvn clean install -Pmutation
++--
+
+    The mutation report is available at target/pit-reports/index.html
