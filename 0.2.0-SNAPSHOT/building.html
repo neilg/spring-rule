@@ -237,7 +237,14 @@
 <p>You'll need git, maven, and a jdk supporting Java 7.</p>
 <p>Get the source from GitHub. Then run</p>
 <div class="source">
-<pre>mvn clean install</pre></div></div>
+<pre>mvn clean install</pre></div>
+<div class="section">
+<h3>Mutation Coverage<a name="Mutation_Coverage"></a></h3>
+<p>$<a name="project.name">project.name</a> uses <a class="externalLink" href="http://pitest.org/">PIT</a> to mutation testing. If you're not familiar with mutation testing then it's worth taking a moment to take a look at <a class="externalLink" href="http://pitest.org/">PIT</a>.</p>
+<p>To run the mutation testing</p>
+<div class="source">
+<pre>mvn clean install -Pmutation</pre></div>
+<p>The mutation report is available at target/pit-reports/index.html</p></div></div>
                   </div>
             </div>
           </div>
