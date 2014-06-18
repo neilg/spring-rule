@@ -30,7 +30,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class MockingIT {
+/**
+ * SpringRuleMockingIT demonstrates a way of using mock objects with a SpringContext.
+ */
+public class SpringRuleMockingIT {
 
     @Rule
     public SpringContext springContext = SpringContext.builder()

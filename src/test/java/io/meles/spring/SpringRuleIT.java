@@ -19,12 +19,8 @@
 
 package io.meles.spring;
 
-import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,66 +45,6 @@ public class SpringRuleIT {
     @Test
     public void canRetrieveBeanFromContext() {
         assertThat((String) springContext.getApplicationContext().getBean("stringBean"), is("it's a string"));
-    }
-
-    @Test
-    public void canGetBeanByName() {
-        final Object asdf = springContext.getBean("stringBean");
-        assertThat(asdf, is((Object) "it's a string"));
-    }
-
-    @Test
-    public void canGetBeanByNameAndType() {
-        final String string = springContext.getBean("stringBean", String.class);
-        assertThat(string, is("it's a string"));
-    }
-
-    @Test
-    public void canGetBeanByType() {
-        final Integer integer = springContext.getBean(Integer.class);
-        assertThat(integer, is(1));
-    }
-
-    @Test
-    public void canGetBeanByNameAndOverrideParams() {
-        final Object prototypeStringWithArgOverride = springContext.getBean("prototypeStringWithArg", Integer.valueOf(3));
-        assertEquals("3", prototypeStringWithArgOverride);
-    }
-
-    @Test
-    public void canCheckContainsBeanByName() {
-        assertTrue(springContext.containsBean("stringBean"));
-        assertFalse(springContext.containsBean("not_present"));
-    }
-
-    @Test
-    public void canCheckSingletonScopeByName() {
-        assertTrue(springContext.isSingleton("singletonString"));
-        assertFalse(springContext.isSingleton("prototypeString"));
-    }
-
-    @Test
-    public void canCheckPrototypeScopeByName() {
-        assertFalse(springContext.isPrototype("singletonString"));
-        assertTrue(springContext.isPrototype("prototypeString"));
-    }
-
-    @Test
-    public void canCheckTypeMatch() {
-        assertTrue(springContext.isTypeMatch("stringBean", String.class));
-        assertFalse(springContext.isTypeMatch("stringBean", Integer.class));
-    }
-
-    @Test
-    public void canGetBeanTypeByName() {
-        final Class<?> type = springContext.getType("stringBean");
-        assertEquals(String.class, type);
-    }
-
-    @Test
-    public void canGetAliasesByName() {
-        final String[] stringBeanAliases = springContext.getAliases("stringBean");
-        assertThat(stringBeanAliases, arrayContainingInAnyOrder("stringBeanAlias"));
     }
 
 }
