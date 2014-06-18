@@ -379,6 +379,9 @@
                                         <tests>io.meles.*</tests>
                                     </targetTests>
                                     <timestampedReports>false</timestampedReports>
+                                    <mutators>
+                                        <mutator>ALL</mutator>
+                                    </mutators>
                                 </configuration>
                             </execution>
                         </executions>

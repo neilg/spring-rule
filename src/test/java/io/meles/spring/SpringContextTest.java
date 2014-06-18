@@ -68,6 +68,18 @@ public class SpringContextTest {
     }
 
     @Test
+    public void cannotAccessContextAfterEvaluation() throws Throwable {
+        final Statement statement = mock(Statement.class);
+        springContext
+                .apply(statement, Description.EMPTY)
+                .evaluate();
+
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("no spring application context, are you calling getApplicationContext() outside of a test execution");
+        springContext.getApplicationContext();
+    }
+
+    @Test
     public void canRetrieveBeanFromContext() throws Throwable {
         final Object[] holder = new Object[1];
         springContext.apply(new Statement() {
