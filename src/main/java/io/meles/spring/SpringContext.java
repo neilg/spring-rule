@@ -156,4 +156,8 @@ public class SpringContext<Ctx extends ApplicationContext> implements TestRule, 
         return new AnnotationConfigApplicationContextBuilder();
     }
 
+    public static AnnotationConfigWebApplicationContextBuilder webContext() {
+        return new AnnotationConfigWebApplicationContextBuilder();
+    }
+
 }

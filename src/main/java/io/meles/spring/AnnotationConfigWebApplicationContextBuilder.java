@@ -19,16 +19,17 @@
 
 package io.meles.spring;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
-public class AnnotationConfigApplicationContextBuilder extends AbstractAnnotationConfigApplicationContextBuilder<AnnotationConfigApplicationContext> {
+public class AnnotationConfigWebApplicationContextBuilder
+        extends AbstractAnnotationConfigApplicationContextBuilder<AnnotationConfigWebApplicationContext> {
 
     @Override
-    public SpringContext<AnnotationConfigApplicationContext> build() {
+    public SpringContext<AnnotationConfigWebApplicationContext> build() {
 
-        final AnnotationConfigApplicationContextFactory applicationContextFactory =
-                new AnnotationConfigApplicationContextFactory(configClasses(), beans());
-
-        return new SpringContext<>(applicationContextFactory, autowireTargets());
+        return new SpringContext<>(
+                new AnnotationConfigWebApplicationContextFactory(configClasses(), beans()),
+                autowireTargets()
+        );
     }
 }
