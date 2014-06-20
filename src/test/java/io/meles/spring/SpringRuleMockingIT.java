@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SpringRuleMockingIT {
 
     @Rule
-    public SpringContext springContext = SpringContext.builder()
+    public SpringContext springContext = SpringContext.context()
             .config(SimpleConfig.class, BarConfig.class)
             .singleton("fooRepository", mock(FooRepository.class))
             .autowire(this)

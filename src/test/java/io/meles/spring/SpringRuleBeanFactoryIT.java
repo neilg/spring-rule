@@ -28,11 +28,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class SpringRuleBeanFactoryIT {
 
     @Rule
-    public SpringContext springContext = SpringContext.builder()
+    public SpringContext<AnnotationConfigApplicationContext> springContext = SpringContext.context()
             .config(SimpleConfig.class)
             .build();
 

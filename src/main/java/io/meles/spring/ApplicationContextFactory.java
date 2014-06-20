@@ -19,32 +19,9 @@
 
 package io.meles.spring;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.springframework.context.ApplicationContext;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+public interface ApplicationContextFactory<T extends ApplicationContext> {
 
-public class SpringRuleIT {
-
-    @Rule
-    public SpringContext springContext = SpringContext.context()
-            .config(SimpleConfig.class)
-            .autowire(this)
-            .build();
-
-    @Autowired
-    public String stringBean;
-
-    @Test
-    public void canAutowire() {
-        assertThat(stringBean, is("it's a string"));
-    }
-
-    @Test
-    public void canRetrieveBeanFromContext() {
-        assertThat((String) springContext.getApplicationContext().getBean("stringBean"), is("it's a string"));
-    }
-
+    T newInstance();
 }

@@ -38,7 +38,7 @@ public class SpringContextBeanConfigTest {
 
     @Before
     public void createRules() {
-        springContext = SpringContext.builder()
+        springContext = SpringContext.context()
                 .config(SimpleConfig.class)
                 .config(ExtraConfig.class)
                 .build();
@@ -47,7 +47,7 @@ public class SpringContextBeanConfigTest {
     @Test
     public void canBuildASpringContextWithNoConfig() throws Throwable {
         final Statement statement = mock(Statement.class);
-        SpringContext.builder()
+        SpringContext.context()
                 .build()
                 .apply(statement, Description.EMPTY)
                 .evaluate();

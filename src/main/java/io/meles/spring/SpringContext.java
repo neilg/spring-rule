@@ -19,17 +19,8 @@
 
 package io.meles.spring;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableMap;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -38,22 +29,20 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class SpringContext implements TestRule, BeanFactory {
+public class SpringContext<Ctx extends ApplicationContext> implements TestRule, BeanFactory {
 
-    private final Class<?>[] configClasses;
+    private final ApplicationContextFactory<Ctx> applicationContextFactory;
     private final List<Object> autowireTargets;
-    private final Map<String, Object> beans;
 
-    private ApplicationContext applicationContext;
+    private Ctx applicationContext;
 
-    private SpringContext(final Builder builder) {
-        this.configClasses = builder.configClasses.toArray(new Class[builder.configClasses.size()]);
-        this.autowireTargets = unmodifiableList(new ArrayList<>(builder.autowireTargets));
-        this.beans = unmodifiableMap(new HashMap<>(builder.beans));
+    public SpringContext(final ApplicationContextFactory<Ctx> applicationContextFactory,
+                         final List<Object> autowireTargets) {
+
+        this.applicationContextFactory = applicationContextFactory;
+        this.autowireTargets = new ArrayList<>(autowireTargets);
     }
 
     @Override
@@ -61,18 +50,17 @@ public class SpringContext implements TestRule, BeanFactory {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                final DefaultListableBeanFactory factory = createBeanFactoryWithSingletons();
 
-                try (final AnnotationConfigApplicationContext applicationContext
-                             = new AnnotationConfigApplicationContext(factory)) {
-
-                    registerConfig(applicationContext);
-                    SpringContext.this.applicationContext = applicationContext;
+                applicationContext = applicationContextFactory.newInstance();
+                try {
                     performAutowiring();
-
                     base.evaluate();
                 } finally {
+                    final Ctx toClose = applicationContext;
                     applicationContext = null;
+                    if (toClose instanceof AutoCloseable) {
+                        ((AutoCloseable) toClose).close();
+                    }
                 }
             }
         };
@@ -82,21 +70,6 @@ public class SpringContext implements TestRule, BeanFactory {
         for (final Object autowireTarget : autowireTargets) {
             autowire(autowireTarget);
         }
-    }
-
-    private void registerConfig(AnnotationConfigApplicationContext applicationContext) {
-        if (configClasses.length > 0) {
-            applicationContext.register(Arrays.copyOf(configClasses, configClasses.length));
-        }
-        applicationContext.refresh();
-    }
-
-    private DefaultListableBeanFactory createBeanFactoryWithSingletons() {
-        final DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
-        for (final Entry<String, Object> bean : beans.entrySet()) {
-            factory.registerSingleton(bean.getKey(), bean.getValue());
-        }
-        return factory;
     }
 
     /**
@@ -179,65 +152,8 @@ public class SpringContext implements TestRule, BeanFactory {
         return getApplicationContext().getAutowireCapableBeanFactory();
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static AnnotationConfigApplicationContextBuilder context() {
+        return new AnnotationConfigApplicationContextBuilder();
     }
 
-    public static class Builder {
-
-        private final List<Class<?>> configClasses = new ArrayList<>();
-        private final List<Object> autowireTargets = new ArrayList<>();
-        private final Map<String, Object> beans = new HashMap<>();
-
-        /**
-         * Add <code>configClasses</code> to this <code>Builder</code>'s list of config <code>Class</code>es.
-         *
-         * @param configClasses the spring config classes to add
-         * @return this Builder
-         */
-        public Builder config(final Class<?>... configClasses) {
-            return config(asList(configClasses));
-        }
-
-        /**
-         * Add <code>configClasses</code> to this <code>Builder</code>'s list of config <code>Class</code>es.
-         *
-         * @param configClasses the spring config classes to add
-         * @return this Builder
-         */
-        private Builder config(final Collection<Class<?>> configClasses) {
-            this.configClasses.addAll(configClasses);
-            return this;
-        }
-
-        /**
-         * Add the provided objects as autowire targets.
-         *
-         * @param targets the objects to autowire
-         * @return this Builder
-         */
-        public Builder autowire(final Object... targets) {
-            return autowire(asList(targets));
-        }
-
-        /**
-         * Add the provided objects as autowire targets.
-         *
-         * @param targets the objects to autowire
-         * @return this Builder
-         */
-        public Builder autowire(final Collection<Object> targets) {
-            this.autowireTargets.addAll(targets);
-            return this;
-        }
-
-        public Builder singleton(final String name, final Object bean) {
-            this.beans.put(name, bean);
-            return this;
-        }
-
-        public SpringContext build() {
-            return new SpringContext(this);
-        }
-    }
 }

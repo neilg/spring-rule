@@ -47,11 +47,11 @@ public class SpringContextLifecycleTest {
 
     @Before
     public void createRules() {
-        springContext = SpringContext.builder()
+        springContext = SpringContext.context()
                 .config(SimpleConfig.class)
                 .config(ExtraConfig.class)
                 .build();
-        badSpringContext = SpringContext.builder()
+        badSpringContext = SpringContext.context()
                 .config(ThrowingConfig.class)
                 .build();
     }
